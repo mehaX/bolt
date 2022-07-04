@@ -23,6 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder, private newsService: NewsService) {}
 
   ngOnInit(): void {
+    this.onSubmit();
   }
 
   onSubmit(): void {

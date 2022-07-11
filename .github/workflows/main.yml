@@ -47,4 +47,4 @@ jobs:
             docker rm ${{ secrets.CONTAINER_NAME }} || true
             docker rmi ${{ secrets.CONTAINER_NAME }}:$TAG || true
             nohup docker load --input ${{ secrets.SERVER_PATH }}/$ARTIFACT_NAME
-            docker run -d -p 3000:3000 --name ${{ secrets.CONTAINER_NAME }} ${{ secrets.CONTAINER_NAME }}:$TAG
+            docker run -d -p ${{ secrets.EXTERNAL_PORT }}:${{ secrets.CONTAINER_PORT }} --name ${{ secrets.CONTAINER_NAME }} ${{ secrets.CONTAINER_NAME }}:$TAG

@@ -24,10 +24,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build docker image
-        run: docker build -t {{ secrets.CONTAINER_NAME }}:{{ TAG }} .
+        run: docker build -t {{ secrets.CONTAINER_NAME }}:{{ env.TAG }} .
 
       - name: Save docker image artifact (tar)
-        run: docker save --output {{ ARTIFACT_NAME }} {{ secrets.CONTAINER_NAME }}:{{ TAG }}
+        run: docker save --output {{ env.ARTIFACT_NAME }} {{ secrets.CONTAINER_NAME }}:{{ env.TAG }}
 
       - name: ssh scp ssh pipelines
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
@@ -40,10 +40,10 @@ jobs:
           port: ${{ '22' }}
           connect_timeout: 10s
           scp: |
-            '{{ ARTIFACT_NAME }}' => {{ secrets.SERVER_PATH }}
+            '{{ env.ARTIFACT_NAME }}' => {{ secrets.SERVER_PATH }}
           last_ssh: |-
             docker stop {{ secrets.CONTAINER_NAME }} || true
             docker rm {{ secrets.CONTAINER_NAME }} || true
-            docker rmi {{ secrets.CONTAINER_NAME }}:{{ TAG }} || true
-            nohup docker load --input {{ secrets.SERVER_PATH }}/{{ ARTIFACT_NAME }}
-            docker run -d -p 3000:3000 --name {{ secrets.CONTAINER_NAME }} {{ secrets.CONTAINER_NAME }}:{{ TAG }}
+            docker rmi {{ secrets.CONTAINER_NAME }}:{{ env.TAG }} || true
+            nohup docker load --input {{ secrets.SERVER_PATH }}/{{ env.ARTIFACT_NAME }}
+            docker run -d -p 3000:3000 --name {{ secrets.CONTAINER_NAME }} {{ secrets.CONTAINER_NAME }}:{{ env.TAG }}

@@ -30,6 +30,7 @@ jobs:
         run: docker save --output $ARTIFACT_NAME ${{ secrets.CONTAINER_NAME }}:$TAG
 
   deploy:
+    needs: build
     name: Deploy
     runs-on: ubuntu-20.04
     steps:
